@@ -296,7 +296,7 @@ def inbound_command(call: types.CallbackQuery):
 
 
 @bot.callback_query_handler(cb_query_startswith("confirm_inbound"), is_admin=True)
-def delete_expired_command(call: types.CallbackQuery):
+def delete_expired_confirm_command(call: types.CallbackQuery):
     bot.edit_message_text(
         f"⚠️ Are you sure? This will *{call.data[16:].replace(':', ' ')} for All Users*‼️",
         call.message.chat.id,
@@ -546,7 +546,7 @@ def edit_note_command(call: types.CallbackQuery):
 def edit_note_step(message: types.Message):
     note = message.text or ''
     if len(note) > 500:
-        wait_msg = bot.send_message(message.chat.id, '❌ Not can not be more than 500 characters.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Note can not be more than 500 characters.')
         schedule_delete_message(message.chat.id, wait_msg.id)
         schedule_delete_message(message.chat.id, message.id)
         return bot.register_next_step_handler(wait_msg, edit_note_step)
@@ -567,7 +567,7 @@ def edit_note_step(message: types.Message):
             expire=user.expire,
             data_limit=user.data_limit,
             usage=user.used_traffic,
-            note=note)
+            note=note or ' ')
         bot.reply_to(message, text, parse_mode="html", reply_markup=BotKeyboard.user_menu(user_info={
             'status': user.status,
             'username': user.username}, note=note))
@@ -601,7 +601,7 @@ def user_command(call: types.CallbackQuery):
                 show_alert=True
             )
         user = UserResponse.from_orm(db_user)
-    try: note = user.note
+    try: note = user.note or ' '
     except: note = None
     text = get_user_info_text(
         status=user.status, username=username, sub_url=user.subscription_url,
@@ -733,7 +733,7 @@ def template_charge_command(call: types.CallbackQuery):
             return bot.answer_callback_query(call.id, "User not found!", show_alert=True)
         user = UserResponse.from_orm(db_user)
         if (user.data_limit and not user.expire) or (not user.data_limit and user.expire):  
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
             text = get_user_info_text(
                 status='active',
@@ -765,7 +765,7 @@ def template_charge_command(call: types.CallbackQuery):
             db_user = crud.update_user(db, db_user, modify)
             xray.operations.add_user(db_user)
             
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
             text = get_user_info_text(
                 status='active',
@@ -805,7 +805,7 @@ def template_charge_command(call: types.CallbackQuery):
                 except:
                     pass
         else:
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
             text = get_user_info_text(
                 status='active',
@@ -1286,7 +1286,7 @@ def confirm_user_command(call: types.CallbackQuery):
                 status=UserStatusModify.disabled))
             xray.operations.remove_user(db_user)
             user = UserResponse.from_orm(db_user)
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
         bot.edit_message_text(
             get_user_info_text(
@@ -1324,7 +1324,7 @@ def confirm_user_command(call: types.CallbackQuery):
                 status=UserStatusModify.active))
             xray.operations.add_user(db_user)
             user = UserResponse.from_orm(db_user)
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
         bot.edit_message_text(
             get_user_info_text(
@@ -1360,7 +1360,7 @@ def confirm_user_command(call: types.CallbackQuery):
             db_user = crud.get_user(db, username)
             crud.reset_user_data_usage(db, db_user)
             user = UserResponse.from_orm(db_user)
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
         bot.edit_message_text(
             get_user_info_text(
@@ -1447,7 +1447,7 @@ def confirm_user_command(call: types.CallbackQuery):
             db_user = crud.update_user(db, db_user, modify)
             xray.operations.add_user(db_user)
             
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
             text = get_user_info_text(
                 status=db_user.status,
@@ -1547,7 +1547,7 @@ def confirm_user_command(call: types.CallbackQuery):
 
         bot.answer_callback_query(call.id, "✅ User updated successfully.")
         
-        try: note = user.note
+        try: note = user.note or ' '
         except: note = None
         text = get_user_info_text(
             status=user.status,
@@ -1630,6 +1630,7 @@ def confirm_user_command(call: types.CallbackQuery):
             k: v for k, v in mem_store.get(f'{call.message.chat.id}:protocols').items() if v}
         proxies = {p: ({'flow': TELEGRAM_DEFAULT_VLESS_XTLS_FLOW} if \
                        TELEGRAM_DEFAULT_VLESS_XTLS_FLOW and p == ProxyTypes.VLESS else {}) for p in inbounds}
+        
         new_user = UserCreate(
             username=mem_store.get(f'{call.message.chat.id}:username'),
             expire=int(mem_store.get(f'{call.message.chat.id}:expire_date').timestamp())\
@@ -1637,8 +1638,7 @@ def confirm_user_command(call: types.CallbackQuery):
             data_limit=mem_store.get(f'{call.message.chat.id}:data_limit')\
                 if mem_store.get(f'{call.message.chat.id}:data_limit') else None,
             proxies=proxies,
-            inbounds=inbounds
-        )
+            inbounds=inbounds)
 
         for proxy_type in new_user.proxies:
             if not xray.config.inbounds_by_protocol.get(proxy_type):
@@ -1663,7 +1663,7 @@ def confirm_user_command(call: types.CallbackQuery):
 
         xray.operations.add_user(db_user)
 
-        try: note = user.note
+        try: note = user.note or ' '
         except: note = None
         text = get_user_info_text(
             status=user.status,
@@ -1900,7 +1900,7 @@ f'{user.username}\
                 return bot.answer_callback_query(call.id, text=f"User not found!", show_alert=True)
             db_user = crud.revoke_user_sub(db, db_user)
             user = UserResponse.from_orm(db_user)
-            try: note = user.note
+            try: note = user.note or ' '
             except: note = None
         text = get_user_info_text(
             status=user.status,
@@ -1937,7 +1937,7 @@ def search(message: types.Message):
         if not db_user:
             return bot.reply_to(message, '❌ User not found.')
         user = UserResponse.from_orm(db_user)
-        try: note = user.note
+        try: note = user.note or ' '
         except: note = None
     text = get_user_info_text(
         status=user.status,
