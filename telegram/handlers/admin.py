@@ -43,23 +43,23 @@ def get_system_info():
         total_users = crud.get_users_count(db)
         users_active = crud.get_users_count(db, UserStatus.active)
     return """\
-🎛 *CPU Cores*: `{cpu_cores}`
-🖥 *CPU Usage*: `{cpu_percent}%`
+🎛 *CPU ядра*: `{cpu_cores}`
+🖥 *CPU используется*: `{cpu_percent}%`
 ➖➖➖➖➖➖➖
-📊 *Total Memory*: `{total_memory}`
-📈 *In Use Memory*: `{used_memory}`
-📉 *Free Memory*: `{free_memory}`
+📊 *Всего памяти*: `{total_memory}`
+📈 *Занято памяти*: `{used_memory}`
+📉 *Свободно памяти*: `{free_memory}`
 ➖➖➖➖➖➖➖
-⬇️ *Download Usage*: `{down_bandwidth}`
-⬆️ *Upload Usage*: `{up_bandwidth}`
-↕️ *Total Usage*: `{total_bandwidth}`
+⬇️ *Загружено*: `{down_bandwidth}`
+⬆️ *Отдано*: `{up_bandwidth}`
+↕️ *Общий трафик*: `{total_bandwidth}`
 ➖➖➖➖➖➖➖
-👥 *Total Users*: `{total_users}`
-🟢 *Active Users*: `{active_users}`
-🔴 *Deactivate Users*: `{deactivate_users}`
+👥 *Всего пользователей*: `{total_users}`
+🟢 *Активных*: `{active_users}`
+🔴 *Неактивных*: `{deactivate_users}`
 ➖➖➖➖➖➖➖
-⏫ *Upload Speed*: `{up_speed}`
-⏬ *Download Speed*: `{down_speed}`
+⏫ *Скорость отдачи*: `{up_speed}`
+⏬ *Скорость загрузки*: `{down_speed}`
 """.format(
         cpu_cores=cpu.cores,
         cpu_percent=cpu.percent,
@@ -97,9 +97,10 @@ def help_command(message: types.Message):
     cleanup_messages(message.chat.id)
     bot.clear_step_handler_by_chat_id(message.chat.id)
     return bot.reply_to(message, """
-{user_link} Welcome to Marzban Telegram-Bot Admin Panel.
-Here you can manage your users and proxies.
-To get started, use the buttons below.
+{user_link} Добро пожаловать в бота Marzban.
+Здесь можно управлять пользователями и подключениями.
+Бот перевел: DigneZzZ Форум: https://openode.ru
+Для старта - нажмите кнопки ниже.
 """.format(
         user_link=user_link(message.from_user)
     ), parse_mode="html", reply_markup=BotKeyboard.main_menu())
@@ -119,7 +120,7 @@ def system_command(call: types.CallbackQuery):
 @bot.callback_query_handler(cb_query_equals('restart'), is_admin=True)
 def restart_command(call: types.CallbackQuery):
     bot.edit_message_text(
-        '⚠️ Are you sure? This will restart Xray core.',
+        '⚠️ Вы уверены? Это перезапустит ядро Xray.',
         call.message.chat.id,
         call.message.message_id,
         reply_markup=BotKeyboard.confirm_action(action='restart')
@@ -130,7 +131,7 @@ def restart_command(call: types.CallbackQuery):
 def delete_user_command(call: types.CallbackQuery):
     username = call.data.split(':')[1]
     bot.edit_message_text(
-        f'⚠️ Are you sure? This will delete user `{username}`.',
+        f'⚠️ Вы уверены? Пользователь будет удален: `{username}`.',
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -143,7 +144,7 @@ def delete_user_command(call: types.CallbackQuery):
 def suspend_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will suspend user `{username}`.",
+        f"⚠️Вы уверены что хотите приостановить: `{username}`.",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -156,7 +157,7 @@ def suspend_user_command(call: types.CallbackQuery):
 def activate_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will activate user `{username}`.",
+        f"⚠️ Вы уверены что хотите активировать: `{username}`.",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -169,7 +170,7 @@ def activate_user_command(call: types.CallbackQuery):
 def reset_usage_user_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will Reset Usage of user `{username}`.",
+        f"⚠️ Вы уверены что хотите сбросить использование трафика: `{username}`.",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -187,11 +188,11 @@ def edit_all_command(call: types.CallbackQuery):
         exipred_users = crud.get_users_count(db, UserStatus.expired)
         limited_users = crud.get_users_count(db, UserStatus.limited)
         text = f'''
-👥 *Total Users*: `{total_users}`
-✅ *Active Users*: `{active_users}`
-❌ *Disabled Users*: `{disabled_users}`
-🕰 *Expired Users*: `{exipred_users}`
-🪫 *Limited Users*: `{limited_users}`'''
+👥 *Всего пользователей*: `{total_users}`
+✅ *Активных*: `{active_users}`
+❌ *отключенных*: `{disabled_users}`
+🕰 *Истёкших*: `{exipred_users}`
+🪫 *Исчерпавших лимит*: `{limited_users}`'''
     return bot.edit_message_text(
         text,
         call.message.chat.id,
@@ -204,7 +205,7 @@ def edit_all_command(call: types.CallbackQuery):
 @bot.callback_query_handler(cb_query_equals('delete_expired'), is_admin=True)
 def delete_expired_command(call: types.CallbackQuery):
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will *DELETE All Expired Users*‼️",
+        f"⚠️ Вы уверены что хотите *УДАЛИТЬ всех ПРОСРОЧЕННЫХ пользователей*‼️",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -214,7 +215,7 @@ def delete_expired_command(call: types.CallbackQuery):
 @bot.callback_query_handler(cb_query_equals('delete_limited'), is_admin=True)
 def delete_limited_command(call: types.CallbackQuery):
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will *DELETE All Limited Users*‼️",
+        f"⚠️ Вы уверены что хотите *УДАЛИТЬ Всех исчерпавших трафик пользователей?*‼️",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -224,7 +225,7 @@ def delete_limited_command(call: types.CallbackQuery):
 @bot.callback_query_handler(cb_query_equals('add_data'), is_admin=True)
 def add_data_command(call: types.CallbackQuery):
     msg = bot.edit_message_text(
-        f"🔋 Enter Data Limit to increase or decrease (GB):",
+        f"🔋 Введите объем трафика чтобы увеличить или уменьшить его (в Гб):",
         call.message.chat.id,
         call.message.message_id,
         reply_markup=BotKeyboard.inline_cancel_action())
@@ -239,13 +240,13 @@ def add_data_step(message):
         if not data_limit:
             raise ValueError
     except ValueError:
-        wait_msg = bot.send_message(message.chat.id, '❌ Data limit must be a number and not zero.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Лимит трафика должен быть числом и не равен 0.')
         schedule_delete_message(message.chat.id, wait_msg.message_id)
         return bot.register_next_step_handler(wait_msg, add_data_step)
     schedule_delete_message(message.chat.id, message.message_id)
     msg = bot.send_message(
         message.chat.id,
-        f"⚠️ Are you sure? this will change Data limit of all users according to <b>"\
+        f"⚠️ Вы уверены что хотите изменить лимит трафика всех пользоваталей на <b>"\
             f"{'+' if data_limit > 0 else '-'}{readable_size(abs(data_limit *1024*1024*1024))}</b>",
         parse_mode="html",
         reply_markup=BotKeyboard.confirm_action('add_data', data_limit))
@@ -257,7 +258,7 @@ def add_data_step(message):
 @bot.callback_query_handler(cb_query_equals('add_time'), is_admin=True)
 def add_time_command(call: types.CallbackQuery):
     msg = bot.edit_message_text(
-        f"📅 Enter Days to increase or decrease expiry:",
+        f"📅 Введите количество дней для увеличения или уменьшения времени использования:",
         call.message.chat.id,
         call.message.message_id,
         reply_markup=BotKeyboard.inline_cancel_action())
@@ -1259,7 +1260,7 @@ def confirm_user_command(call: types.CallbackQuery):
             xray.operations.remove_user(db_user)
 
         bot.edit_message_text(
-            '✅ User deleted.',
+            '✅ Пользователь удалён.',
             call.message.chat.id,
             call.message.message_id,
             reply_markup=BotKeyboard.main_menu()
