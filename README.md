@@ -10,7 +10,7 @@ First you need to clone [the repository](https://github.com/mmdchnar/marzban-tel
 
 ```bash
 cd /opt/marzban
-git clone https://github.com/mmdchnar/marzban-telebot
+git clone https://github.com/DigneZzZ/marzban-telebot
 ```
 
 Then you have to map files to your docker container. Add this line to volume section of `docker-compose.yml`:
