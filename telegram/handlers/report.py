@@ -24,17 +24,17 @@ def report(message: str, parse_mode="html", keyboard=None):
 
 def report_new_user(user_id: int, username: str, by: str, expire_date: int, usage: str, proxies: list):
     text = '''\
-🆕 <b>#Created</b>
+🆕 <b>#Создан</b>
 ➖➖➖➖➖➖➖➖➖
-<b>Username :</b> <code>{username}</code>
-<b>Traffic Limit :</b> <code>{usage}</code>
-<b>Expire Date :</b> <code>{expire_date}</code>
-<b>Proxies :</b> <code>{proxies}</code>
+<b>Пользователь :</b> <code>{username}</code>
+<b>Лимит трафика :</b> <code>{usage}</code>
+<b>Срок действия :</b> <code>{expire_date}</code>
+<b>Прокси :</b> <code>{proxies}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <b>#{by}</b>'''.format(
+<b>Кем :</b> <b>#{by}</b>'''.format(
         by=escape_html(by),
         username=escape_html(username),
-        usage=readable_size(usage) if usage else "Unlimited",
+        usage=readable_size(usage) if usage else "Неограничен",
         expire_date=datetime.fromtimestamp(expire_date).strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never",
         proxies="" if not proxies else ", ".join([escape_html(proxy.type) for proxy in proxies])
     )
@@ -51,18 +51,18 @@ def report_new_user(user_id: int, username: str, by: str, expire_date: int, usag
 
 def report_user_modification(username: str, expire_date: int, usage: str, proxies: list, by: str):
     text = '''\
-✏️ <b>#Modified</b>
+✏️ <b>#Изменен</b>
 ➖➖➖➖➖➖➖➖➖
-<b>Username :</b> <code>{username}</code>
-<b>Traffic Limit :</b> <code>{usage}</code>
-<b>Expire Date :</b> <code>{expire_date}</code>
-<b>Protocols :</b> <code>{protocols}</code>
+<b>Пользователь :</b> <code>{username}</code>
+<b>Лимит трафика :</b> <code>{usage}</code>
+<b>Срок действия :</b> <code>{expire_date}</code>
+<b>Прокси :</b> <code>{proxies}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By :</b> <b>#{by}</b>\
+<b>Кем :</b> <b>#{by}</b>\
     '''.format(
         by=escape_html(by),
         username=escape_html(username),
-        usage=readable_size(usage) if usage else "Unlimited",
+        usage=readable_size(usage) if usage else "Неограничен",
         expire_date=datetime.fromtimestamp(expire_date).strftime("%H:%M:%S %Y-%m-%d") if expire_date else "Never",
         protocols=', '.join([p.type for p in proxies])
     )
@@ -75,11 +75,11 @@ def report_user_modification(username: str, expire_date: int, usage: str, proxie
 
 def report_user_deletion(username: str, by: str):
     text = '''\
-🗑 <b>#Deleted</b>
+🗑 <b>#Удален</b>
 ➖➖➖➖➖➖➖➖➖
-<b>Username</b> : <code>{username}</code>
+<b>Пользователь</b> : <code>{username}</code>
 ➖➖➖➖➖➖➖➖➖
-<b>By</b> : <b>#{by}</b>\
+<b>Кем</b> : <b>#{by}</b>\
     '''.format(
         by=escape_html(by),
         username=escape_html(username)
@@ -89,15 +89,15 @@ def report_user_deletion(username: str, by: str):
 
 def report_status_change(username: str, status: str):
     _status = {
-        'active': '✅ <b>#Activated</b>',
-        'disabled': '❌ <b>#Disabled</b>',
-        'limited': '🪫 <b>#Limited</b>',
-        'expired': '🕔 <b>#Expired</b>'
+        'active': '✅ <b>#Активных</b>',
+        'disabled': '❌ <b>#Отключенных</b>',
+        'limited': '🪫 <b>#Заканчивающих</b>',
+        'expired': '🕔 <b>#Истёкших</b>'
     }
     text = '''\
 {status}
 ➖➖➖➖➖➖➖➖➖
-<b>Username</b> : <code>{username}</code>\
+<b>Пользователь</b> : <code>{username}</code>\
     '''.format(
         username=escape_html(username),
         status=_status[status]
