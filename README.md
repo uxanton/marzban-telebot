@@ -1,10 +1,10 @@
 # Install
 
-First you need to clone [the repository](https://github.com/mmdchnar/marzban-telebot) to your sever. You can do it by this:
+First you need to clone [the repository](https://github.com/uxanton/marzban-telebot) to your sever. You can do it by this:
 
 ```bash
 cd /opt/marzban
-git clone https://github.com/DigneZzZ/marzban-telebot
+git clone https://github.com/uxanton/marzban-telebot
 ```
 
 Then you have to map files to your docker container. Add this line to volume section of `docker-compose.yml`:
