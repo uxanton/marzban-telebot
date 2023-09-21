@@ -190,7 +190,7 @@ def edit_all_command(call: types.CallbackQuery):
         text = f'''
 👥 *Всего пользователей*: `{total_users}`
 ✅ *Активных*: `{active_users}`
-❌ *отключенных*: `{disabled_users}`
+❌ *Отключенных*: `{disabled_users}`
 🕰 *Истёкших*: `{exipred_users}`
 🪫 *Исчерпавших лимит*: `{limited_users}`'''
     return bot.edit_message_text(
@@ -466,11 +466,9 @@ def users_command(call: types.CallbackQuery):
     with GetDB() as db:
         total_pages = math.ceil(crud.get_users_count(db) / 10)
         users = crud.get_users(db, offset=(page - 1) * 10, limit=10, sort=[crud.UsersSortingOptions["-created_at"]])
-        text = """👥 Users: (Page {page}/{total_pages})
-✅ Active
-❌ Disabled
-🕰 Expired
-🪫 Limited""".format(page=page, total_pages=total_pages)
+        text = """👥 Пользователи: (страницы {page}/{total_pages})
+✅ Активные  ❌ Не активные
+🕰 Истёкшие  🪫 Ограниченные""".format(page=page, total_pages=total_pages)
 
     bot.edit_message_text(
         text,
@@ -481,7 +479,6 @@ def users_command(call: types.CallbackQuery):
             users, page, total_pages=total_pages)
     )
 
-
 def get_user_info_text(
         status: str, username: str,sub_url : str, data_limit: int = None,
         usage: int = None, expire: int = None, note: str = None) -> str:
@@ -491,19 +488,19 @@ def get_user_info_text(
         'limited': '🪫',
         'disabled': '❌'}
     text = f'''\
-┌─{statuses[status]} <b>Status:</b> <code>{status.title()}</code>
-│          └─<b>Username:</b> <code>{username}</code>
-│
-├─🔋 <b>Data limit:</b> <code>{readable_size(data_limit) if data_limit else 'Unlimited'}</code>
-│          └─<b>Data Used:</b> <code>{readable_size(usage) if usage else "-"}</code>
-│
-├─📅 <b>Expiry Date:</b> <code>{datetime.fromtimestamp(expire).date() if expire else 'Never'}</code>
-│           └─<b>Days left:</b> <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days if expire else '-'}</code>
-│
+{statuses[status]} <b><a href="{sub_url}">{username}</a></b> 
+
+🔋 <b>Трафик:</b> <code>{readable_size(data_limit) if data_limit else 'безлимит'}</code>
+Использовано: <code>{readable_size(usage) if usage else "0"}</code>
+
 '''
+    if expire:
+        text += f'📅 <b>Когда конец:</b>  <code>{datetime.fromtimestamp(expire).date()}</code>\n'
+        text += f'Дней осталось: <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days}</code>\n\n'
+
     if note:
-        text += f'├─📝 <b>Note:</b> <code>{note}</code>\n│\n'
-    text += f'└─🚀 <b><a href="{sub_url}">Subscription</a>:</b> <code>{sub_url}</code>'
+        text += f'📝 <b>Заметка:</b> <code>{note}</code>\n\n'
+
     return text
 
 
@@ -598,7 +595,7 @@ def user_command(call: types.CallbackQuery):
         if not db_user:
             return bot.answer_callback_query(
                 call.id,
-                '❌ User not found.',
+                '❌ Не найден',
                 show_alert=True
             )
         user = UserResponse.from_orm(db_user)
@@ -663,6 +660,7 @@ def genqr_command(call: types.CallbackQuery):
 
     bot.answer_callback_query(call.id, "Generating QR code...")
 
+    """
     for link in user.links:
         f = io.BytesIO()
         qr = qrcode.QRCode(border=6)
@@ -675,6 +673,7 @@ def genqr_command(call: types.CallbackQuery):
             caption=f"<code>{link}</code>",
             parse_mode="HTML"
         )
+    """
     with io.BytesIO() as f:
         qr = qrcode.QRCode(border=6)
         qr.add_data(user.subscription_url)
@@ -700,8 +699,10 @@ def genqr_command(call: types.CallbackQuery):
         pass
 
     text = f"<code>{user.subscription_url}</code>\n\n\n"
+    """
     for link in user.links:
         text += f"<code>{link}</code>\n\n"
+    """
 
     bot.send_message(
         call.message.chat.id,
