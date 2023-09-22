@@ -495,8 +495,8 @@ def get_user_info_text(
 
 '''
     if expire:
-        text += f'📅 <b>Когда конец:</b>  <code>{datetime.fromtimestamp(expire).date()}</code>\n'
-        text += f'Дней осталось: <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days}</code>\n\n'
+        text += f'📅 <b>Дней осталось: <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days}</code>\n'
+        text += f'Когда конец:</b>  <code>{datetime.fromtimestamp(expire).date()}</code>\n\n'
 
     if note:
         text += f'📝 <b>Заметка:</b> <code>{note}</code>\n\n'
