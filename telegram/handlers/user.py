@@ -22,23 +22,21 @@ def usage_command(message):
         dbuser = crud.get_user(db, username)
 
         if not dbuser:
-            return bot.reply_to(message, "No user found with this username")
+            return bot.reply_to(message, "Такого пользователя нет")
         user = UserResponse.from_orm(dbuser)
 
         statuses = {
-            'active': '✅',
-            'expired': '🕰',
-            'limited': '📵',
-            'disabled': '❌'}
+            'активный': '✅',
+            'истекает': '🕰',
+            'ограничен': '📵',
+            'отключен': '❌'}
 
         text = f'''\
-┌─{statuses[user.status]} <b>Status:</b> <code>{user.status.title()}</code>
-│          └─<b>Username:</b> <code>{user.username}</code>
-│
-├─🔋 <b>Data limit:</b> <code>{readable_size(user.data_limit) if user.data_limit else 'Unlimited'}</code>
-│          └─<b>Data Used:</b> <code>{readable_size(user.used_traffic) if user.used_traffic else "-"}</code>
-│
-└─📅 <b>Expiry Date:</b> <code>{datetime.fromtimestamp(user.expire).date() if user.expire else 'Never'}</code>
-            └─<b>Days left:</b> <code>{(datetime.fromtimestamp(user.expire or 0) - datetime.now()).days if user.expire else '-'}</code>'''
+<b>Имя: </b> <code>{user.username}</code> 
+{statuses[user.status]} <b>Статус:</b> <code>{user.status.title()}</code>
+<b>Трафик: </b> <code>{readable_size(user.data_limit) if user.data_limit else 'безлимит'}</code>
+<code>{f'<b>Использовано: </b> {readable_size(user.used_traffic)}' if user.used_traffic else ''}</code>
+<b>Срок:</b> <code>{datetime.fromtimestamp(user.expire).date() if user.expire else 'бессрочно'}</code>
+<code>{f'<b>Дней осталось: </b>'(datetime.fromtimestamp(user.expire or 0) - datetime.now()).days if user.expire else ''}</code>'''
 
     return bot.reply_to(message, text, parse_mode='HTML')
