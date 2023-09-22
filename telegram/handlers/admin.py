@@ -595,7 +595,7 @@ def user_command(call: types.CallbackQuery):
         if not db_user:
             return bot.answer_callback_query(
                 call.id,
-                '❌ Не найден',
+                '❌ Не найде',
                 show_alert=True
             )
         user = UserResponse.from_orm(db_user)
