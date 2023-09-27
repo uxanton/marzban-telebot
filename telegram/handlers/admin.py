@@ -466,9 +466,9 @@ def users_command(call: types.CallbackQuery):
     with GetDB() as db:
         total_pages = math.ceil(crud.get_users_count(db) / 10)
         users = crud.get_users(db, offset=(page - 1) * 10, limit=10, sort=[crud.UsersSortingOptions["-created_at"]])
-        text = """👥 Пользователи: (страницы {page}/{total_pages})
-✅ Активные  ❌ Не активные
-🕰 Истёкшие  🪫 Ограниченные""".format(page=page, total_pages=total_pages)
+        text = """👥 Пользователи: (страницы {page}/{total_pages}) \n
+<i>✅ Активные  ❌ Не активные
+🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
 
     bot.edit_message_text(
         text,
@@ -495,8 +495,8 @@ def get_user_info_text(
 
 '''
     if expire:
-        text += f'📅 <b>Дней осталось: <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days}</code>\n'
-        text += f'Когда конец:</b>  <code>{datetime.fromtimestamp(expire).date()}</code>\n\n'
+        text += f'📅 <b>Дней осталось:</b>  <code>{(datetime.fromtimestamp(expire or 0) - datetime.now()).days}</code>\n'
+        text += f'Когда конец: <code>{datetime.fromtimestamp(expire).date()}</code>\n\n'
 
     if note:
         text += f'📝 <b>Заметка:</b> <code>{note}</code>\n\n'
