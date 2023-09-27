@@ -4,13 +4,13 @@
 
 **<a href="https://github.com/mmdchnar/marzban-telebot/tree/main/screenshots">Screenshots</a>**
 
-# Install
+# Установка
 
-First you need to clone [the repository](https://github.com/mmdchnar/marzban-telebot) to your sever. You can do it by this:
+First you need to clone [the repository](https://github.com/uxanton/marzban-telebot) to your sever. You can do it by this:
 
 ```bash
 cd /opt/marzban
-git clone https://github.com/DigneZzZ/marzban-telebot
+git clone https://github.com/uxanton/marzban-telebot
 ```
 
 Then you have to map files to your docker container. Add this line to volume section of `docker-compose.yml`:
@@ -45,61 +45,9 @@ Now you can restart your marzban's docker:
 marzban restart
 ```
 
-# Update
+# Обновить
 
 For update just need to pull repository and restart:
-```bash
-cd /opt/marzban/marzban-telebot/
-git pull
-marzban restart
-```
-
----
-
-# نصب
-
-اول باید  [رپوزیتوری](https://github.com/mmdchnar/marzban-telebot) رو تو سرورتون کلون کنید. برای اینکار این کامند هارو بزنید:
-
-```bash
-cd /opt/marzban
-git clone https://github.com/mmdchnar/marzban-telebot
-```
-
-بعدش باید فایل هارو به داکر نشون بدید. برای این کار این دو خط رو به قسمت volume فایل `docker-compose.yml` اضافه کنید:
-
-**(کل فایل رو جایگذین نکنید!! فقط دوخط اخر رو اضاف کنید)**
-```docker
-services:
-    marzban:
-        ...
-        volumes:
-            ...
-            - /opt/marzban/marzban-telebot/telegram:/code/app/telegram
-            - /opt/marzban/marzban-telebot/config.py:/code/config.py
-```
-بعذش باید فایل `.env` رو تغییر بدید.
-این هارو تغییر بدید:
-
-**توجه: اسم متغیر `TELEGRAM_ADMIN_ID` به `TELEGRAM_ADMINS_ID` تغییر کرده**
-```
-TELEGRAM_API_TOKEN = 123456789:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-TELEGRAM_ADMINS_ID = 987654321, 123456789
-TELEGRAM_LOGGER_CHANNEL_ID = -1234567891234
-TELEGRAM_DEFAULT_VLESS_XTLS_FLOW = "xtls-rprx-vision"
-```
-
-برای کانال لاگر شما باید اول یک کانال (ترجیحا خصوصی) بسازید و داخلش یک پیام بفرستید.
-حالا اون پیام رو برای ربات <a href="https://t.me/userinfobot">userinfobot</a> بفرستید تا ایدی عددی کانال رو بهتون بده و داخل فایل قرار بدید.
-
-
-حالا مرزبان رو ریستارت میکنیم تا اعمال بشه:
-```
-marzban restart
-```
-
-# به روز رسانی
-
-برای بروزرسانی فقط کافیه ریپوزیتوری رو اپدیت کنید و پنل رو ریستارت کنید:
 ```bash
 cd /opt/marzban/marzban-telebot/
 git pull
