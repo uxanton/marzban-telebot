@@ -1,9 +1,3 @@
-<p align="center">
-    <img src="https://github.com/mmdchnar/marzban-telebot/blob/main/screenshots/marzban-telebot2.PNG" alt="Charge screenshot" width="500" height="auto">
-</p>
-
-**<a href="https://github.com/mmdchnar/marzban-telebot/tree/main/screenshots">Screenshots</a>**
-
 # Установка
 
 First you need to clone [the repository](https://github.com/uxanton/marzban-telebot) to your sever. You can do it by this:
