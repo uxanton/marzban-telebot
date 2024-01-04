@@ -44,7 +44,7 @@ class BotKeyboard:
         keyboard.add(
             types.InlineKeyboardButton(text='➕ Добавить протоколы', callback_data='inbound_add'),
             types.InlineKeyboardButton(text='➖ Удалить протоколы', callback_data='inbound_remove'))
-        keyboard.add(types.InlineKeyboardButton(text='🔙 Назад', callback_data='cancel'))
+        keyboard.add(types.InlineKeyboardButton(text='⬅ Назад', callback_data='cancel'))
         return keyboard
 
 
@@ -53,7 +53,7 @@ class BotKeyboard:
         keyboard = types.InlineKeyboardMarkup()
         for inbound in inbounds:
             keyboard.add(types.InlineKeyboardButton(text=inbound, callback_data=f'confirm_{action}:{inbound}'))
-        keyboard.add(types.InlineKeyboardButton(text='🔙 Назад', callback_data='cancel'))
+        keyboard.add(types.InlineKeyboardButton(text='⬅ Назад', callback_data='cancel'))
         return keyboard
 
 
@@ -72,7 +72,7 @@ class BotKeyboard:
 
         keyboard.add(
             types.InlineKeyboardButton(
-                text='🔙 Назад',
+                text='⬅ Назад',
                 callback_data=f'user:{username}' if username else 'cancel'))
         return keyboard
 
@@ -139,7 +139,7 @@ class BotKeyboard:
         if with_back:
             keyboard.add(
                 types.InlineKeyboardButton(
-                    text='🔙 Назад',
+                    text='⬅ Назад',
                     callback_data=f'users:{page}'
                 )
             )
@@ -157,7 +157,7 @@ class BotKeyboard:
         )
         keyboard.add(
             types.InlineKeyboardButton(
-                text='🔙 Назад',
+                text='⬅ Назад',
                 callback_data=f'user:{username}'
             )
         )
@@ -261,7 +261,7 @@ class BotKeyboard:
                 )
         keyboard.add(
             types.InlineKeyboardButton(
-                text='🔙 назад',
+                text='⬅ Назад',
                 callback_data='cancel'
             )
         )
