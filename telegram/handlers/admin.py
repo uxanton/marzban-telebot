@@ -508,13 +508,13 @@ def get_template_info_text(
         id: int, data_limit: int, expire_duration: int, username_prefix: str, username_suffix: str, inbounds: dict):
     protocols = ""
     for p, inbounds in inbounds.items():
-        protocols += f"\n├─ <b>{p.upper()}</b>\n"
-        protocols += "├───" + ", ".join([f"<code>{i}</code>" for i in inbounds])
+        protocols += f"\n<b>{p.upper()}</b>\n"
+        protocols += "↳ " + ", ".join([f"{i}" for i in inbounds])
     text = f"""
 📊 <b>Параметры шаблона</>
 
-<b>Трафик:</b>: {readable_size(data_limit) if data_limit else 'Безлимит'}
-<b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Бесконечно'}
+<b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
+<b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
 <b>Префикс:</b> {username_prefix if username_prefix else 'Без префикса'}
 <b>Суффикс:</b> {username_suffix if username_suffix else 'Без суффикса'}
 <b>Протоколы</b>: {protocols}
