@@ -508,7 +508,7 @@ def get_template_info_text(
         id: int, data_limit: int, expire_duration: int, username_prefix: str, username_suffix: str, inbounds: dict):
     protocols = ""
     for p, inbounds in inbounds.items():
-        protocols += f"<b>{p.upper()}</b>"
+        protocols += f"<b>{p.upper()}</b>\n"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
     text = f"""
 📊 <b>Параметры шаблона</b>
