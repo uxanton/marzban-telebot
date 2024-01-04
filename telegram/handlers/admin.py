@@ -521,7 +521,7 @@ def get_template_info_text(
 <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
 {prefix_text}
 {suffix_text}
-<b>Протоколы</b>: {protocols}
+{protocols}
         """
     return text
 
