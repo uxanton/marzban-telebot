@@ -508,7 +508,7 @@ def get_template_info_text(
         id: int, data_limit: int, expire_duration: int, username_prefix: str, username_suffix: str, inbounds: dict):
     protocols = ""
     for p, inbounds in inbounds.items():
-        protocols += f"\n\n<b>{p.upper()}</b>\n"
+        protocols += f"\n<b>{p.upper()}</b>"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
 
     prefix_text = f"<b>Префикс:</b> {username_prefix}" if username_prefix else ""
@@ -519,6 +519,8 @@ def get_template_info_text(
 
     <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
     <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
+    {prefix_text}
+    {suffix_text}
     {protocols}
     """
     
