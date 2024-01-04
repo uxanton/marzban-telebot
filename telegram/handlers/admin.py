@@ -510,13 +510,17 @@ def get_template_info_text(
     for p, inbounds in inbounds.items():
         protocols += f"\n\n<b>{p.upper()}</b>\n"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
+
+    prefix_text = f"<b>Префикс:</b> {username_prefix}" if username_prefix else ""
+    suffix_text = f"<b>Суффикс:</b> {username_suffix}" if username_suffix else ""
+    
     text = f"""
 📊 <b>Параметры шаблона</>
 
 <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
 <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-<b>Префикс:</b> {username_prefix if username_prefix else 'Без префикса'}
-<b>Суффикс:</b> {username_suffix if username_suffix else 'Без суффикса'}
+{prefix_text}
+{suffix_text}
 <b>Протоколы</b>: {protocols}
         """
     return text
