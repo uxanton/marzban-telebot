@@ -367,7 +367,7 @@ def edit_user_command(call: types.CallbackQuery):
     if action == "data":
         msg = bot.send_message(
             call.message.chat.id,
-            '⬆️ Enter Data Limit (GB):\n⚠️ Send 0 for unlimited.',
+            '⬆️ Введи лимит трафика (GB):\n⚠️ Отправь 0 для безлимита.',
             reply_markup=BotKeyboard.inline_cancel_action(f'user:{username}')
         )
         mem_store.set(f"{call.message.chat.id}:edit_msg_text", call.message.text)
@@ -511,13 +511,13 @@ def get_template_info_text(
         protocols += f"\n├─ <b>{p.upper()}</b>\n"
         protocols += "├───" + ", ".join([f"<code>{i}</code>" for i in inbounds])
     text = f"""
-📊 Template Info:
-┌ ID: <b>{id}</b>
-├ Data Limit: <b>{readable_size(data_limit) if data_limit else 'Unlimited'}</b>
-├ Expire Date: <b>{(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Never'}</b>
-├ Username Prefix: <b>{username_prefix if username_prefix else '🚫'}</b>
-├ Username Suffix: <b>{username_suffix if username_suffix else '🚫'}</b>
-├ Protocols: {protocols}
+📊 <b>Параметры шаблона</>
+
+<b>Трафик:</b>: {readable_size(data_limit) if data_limit else 'Безлимит'}
+<b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Бесконечно'}
+{'<b>Префикс:</b>' username_prefix if username_prefix}
+{'<b>Суффикс:</b>' username_suffix if username_suffix}
+<b>Протоколы</b>: {protocols}
         """
     return text
 
@@ -850,24 +850,6 @@ def charge_command(call: types.CallbackQuery):
             username=username,
         )
     )
-
-# @bot.callback_query_handler(cb_query_equals('create_user_template'), is_admin=True)
-# def create_user_template(db: Session, user_template: UserTemplateCreate) -> UserTemplate:
-#     inbound_tags: list[str] = []
-#     for _, i in user_template.inbounds.items():
-#         inbound_tags.extend(i)
-#     dbuser_template = UserTemplate(
-#         name=user_template.name,
-#         data_limit=user_template.data_limit,
-#         expire_duration=user_template.expire_duration,
-#         username_prefix=user_template.username_prefix,
-#         username_suffix=user_template.username_suffix,
-#         inbounds=db.query(ProxyInbound).filter(ProxyInbound.tag.in_(inbound_tags)).all()
-#     )
-#     db.add(dbuser_template)
-#     db.commit()
-#     db.refresh(dbuser_template)
-#     return dbuser_template
     
 
 @bot.callback_query_handler(cb_query_equals('template_add_user'), is_admin=True)
@@ -875,10 +857,10 @@ def add_user_from_template_command(call: types.CallbackQuery):
     with GetDB() as db:
         templates = crud.get_user_templates(db)
         if not templates:
-            return bot.answer_callback_query(call.id, "You don't have any User Templates!")
+            return bot.answer_callback_query(call.id, "Пока нет шаблонов!")
 
     bot.edit_message_text(
-        "<b>Select a Template to create user from</b>:",
+        "<b>Выбери шаблон</b>:",
         call.message.chat.id,
         call.message.message_id,
         parse_mode='html',
@@ -892,7 +874,7 @@ def add_user_from_template(call: types.CallbackQuery):
     with GetDB() as db:
         template = crud.get_user_template(db, template_id)
         if not template:
-            return bot.answer_callback_query(call.id, "Template not found!", show_alert=True)
+            return bot.answer_callback_query(call.id, "Шаблон не найден!", show_alert=True)
         template = UserTemplateResponse.from_orm(template)
 
     text = get_template_info_text(
@@ -900,9 +882,9 @@ def add_user_from_template(call: types.CallbackQuery):
         username_prefix=template.username_prefix, username_suffix=template.username_suffix,
         inbounds=template.inbounds)
     if template.username_prefix:
-        text += f"\n⚠️ Username will be prefixed with <code>{template.username_prefix}</code>"
+        text += f"\n⚠️ Префикс для пользователя <code>{template.username_prefix}</code>"
     if template.username_suffix:
-        text += f"\n⚠️ Username will be suffixed with <code>{template.username_suffix}</code>"
+        text += f"\n⚠️ Суффикс для пользователя <code>{template.username_suffix}</code>"
 
     mem_store.set(f"{call.message.chat.id}:template_id", template.id)
     template_msg = bot.edit_message_text(
@@ -911,7 +893,7 @@ def add_user_from_template(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="HTML"
     )
-    text = '👤 Enter username:\n⚠️ Username only can be 3 to 32 characters and contain a-z, A-Z, 0-9, and underscores in between.'
+    text = '👤 Введите имя:\n <code>Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.</code>'
     msg = bot.send_message(
         call.message.chat.id,
         text,
@@ -939,7 +921,7 @@ def random_username(call: types.CallbackQuery):
 
     if not template_id:
         msg = bot.send_message(call.message.chat.id,
-            '⬆️ Enter Data Limit (GB):\n⚠️ Send 0 for unlimited.',
+            '⬆️ Введи лимит трафика (GB):\n⚠️ Отправь 0 для безлимита.',
             reply_markup=BotKeyboard.inline_cancel_action())
         schedule_delete_message(call.message.chat.id, msg.id)
         return bot.register_next_step_handler(call.message, add_user_data_limit_step, username=username)
@@ -969,7 +951,7 @@ def random_username(call: types.CallbackQuery):
         expire_date = today + relativedelta(seconds=template.expire_duration)
     mem_store.set(f"{call.message.chat.id}:expire_date", expire_date)
 
-    text = f"📝 Creating user <code>{username}</code>\n" + get_template_info_text(
+    text = f"📝 Создание пользователя <code>{username}</code>\n" + get_template_info_text(
         id=template.id, data_limit=template.data_limit, expire_duration=template.expire_duration,
         username_prefix=template.username_prefix, username_suffix=template.username_suffix, inbounds=template.inbounds)
 
@@ -988,10 +970,10 @@ def random_username(call: types.CallbackQuery):
 def add_user_from_template_username_step(message: types.Message):
     template_id = mem_store.get(f"{message.chat.id}:template_id")
     if template_id is None:
-        return bot.send_message(message.chat.id, "An error occured in the process! try again.")
+        return bot.send_message(message.chat.id, "Какая-то ошибка! Попробуй снова.")
 
     if not message.text:
-        wait_msg = bot.send_message(message.chat.id, '❌ Username can not be empty.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Имя не может быть пустым.')
         schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
         return bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
 
@@ -1007,7 +989,7 @@ def add_user_from_template_username_step(message: types.Message):
         match = re.match(r'^(?!.*__)(?!.*_$)\w{2,31}[a-zA-Z\d]$', username)
         if not match:
             wait_msg = bot.send_message(message.chat.id,
-                '❌ Username only can be 3 to 32 characters and contain a-z, A-Z, 0-9, and underscores in between.')
+                '❌ Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.')
             schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
             return bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
 
@@ -1025,7 +1007,7 @@ def add_user_from_template_username_step(message: types.Message):
             return bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
 
         if crud.get_user(db, username):
-            wait_msg = bot.send_message(message.chat.id, '❌ Username already exists.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Такой пользвоатель уже есть.')
             schedule_delete_message(message.chat.id, wait_msg.message_id, message.message_id)
             return bot.register_next_step_handler(wait_msg, add_user_from_template_username_step)
         template = UserTemplateResponse.from_orm(template)
@@ -1046,7 +1028,7 @@ def add_user_from_template_username_step(message: types.Message):
         expire_date = today + relativedelta(seconds=template.expire_duration)
     mem_store.set(f"{message.chat.id}:expire_date", expire_date)
 
-    text = f"📝 Creating user <code>{username}</code>\n" + get_template_info_text(
+    text = f"📝 Создание пользователя <code>{username}</code>\n" + get_template_info_text(
         id=template.id, data_limit=template.data_limit, expire_duration=template.expire_duration,
         username_prefix=template.username_prefix, username_suffix=template.username_suffix, inbounds=template.inbounds)
 
@@ -1074,8 +1056,7 @@ def add_user_command(call: types.CallbackQuery):
         pass
     username_msg = bot.send_message(
         call.message.chat.id,
-        '👤 Enter username:\n⚠️Username only can be 3 to 32 characters and contain a-z, A-Z 0-9, and underscores in '
-        'between.',
+        '👤 Введи имя:\n⚠️ Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.',
         reply_markup=BotKeyboard.random_username())
     schedule_delete_message(call.message.chat.id, username_msg.id)
     bot.register_next_step_handler(username_msg, add_user_username_step)
@@ -1084,7 +1065,7 @@ def add_user_command(call: types.CallbackQuery):
 def add_user_username_step(message: types.Message):
     username = message.text
     if not username:
-        wait_msg = bot.send_message(message.chat.id, '❌ Username can not be empty.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Имя не может быть пустым.')
         schedule_delete_message(message.chat.id, wait_msg.id)
         schedule_delete_message(message.chat.id, message.id)
         return bot.register_next_step_handler(wait_msg, add_user_username_step)
@@ -1096,14 +1077,14 @@ def add_user_username_step(message: types.Message):
         return bot.register_next_step_handler(wait_msg, add_user_username_step)
     with GetDB() as db:
         if crud.get_user(db, username):
-            wait_msg = bot.send_message(message.chat.id, '❌ Username already exists.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Такой пользвоатель уже есть')
             schedule_delete_message(message.chat.id, wait_msg.id)
             schedule_delete_message(message.chat.id, message.id)
             return bot.register_next_step_handler(wait_msg, add_user_username_step)
     schedule_delete_message(message.chat.id, message.id)
     cleanup_messages(message.chat.id)
     msg = bot.send_message(message.chat.id,
-        '⬆️ Enter Data Limit (GB):\n⚠️ Send 0 for unlimited.',
+        '⬆️ Введи лимит трафика (GB):\n⚠️ Отправь 0 для безлимита.',
         reply_markup=BotKeyboard.inline_cancel_action())
     schedule_delete_message(message.chat.id, msg.id)
     bot.register_next_step_handler(msg, add_user_data_limit_step, username=username)
