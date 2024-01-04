@@ -511,8 +511,8 @@ def get_template_info_text(
         protocols += f"\n\n<b>{p.upper()}</b>\n"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
 
-    prefix_text = f"{username_prefix and '<b>Префикс:</b> ' + username_prefix or ''}"
-    suffix_text = f"{username_suffix and '<b>Суффикс:</b> ' + username_suffix or ''}"
+    prefix_text = f"<b>Префикс:</b> {username_prefix}" if username_prefix else ""
+    suffix_text = f"<b>Суффикс:</b> {username_suffix}" if username_suffix else ""
     
     text = f"""
 📊 <b>Параметры шаблона</>
