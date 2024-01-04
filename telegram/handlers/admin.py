@@ -509,7 +509,7 @@ def get_template_info_text(
     protocols = ""
     for p, inbounds in inbounds.items():
         protocols += f"\n\n<b>{p.upper()}</b>\n"
-        protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
+        protocols += "→ " + ", ".join([f"</code>{i}</code>" for i in inbounds])
     text = f"""
 📊 <b>Параметры шаблона</>
 
@@ -893,7 +893,7 @@ def add_user_from_template(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="HTML"
     )
-    text = '👤 <b>Введите имя:</b>\n <code>Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.</code>'
+    text = '👤 <b>Введите имя:</b>\n<code>Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.</code>'
     msg = bot.send_message(
         call.message.chat.id,
         text,
@@ -951,7 +951,7 @@ def random_username(call: types.CallbackQuery):
         expire_date = today + relativedelta(seconds=template.expire_duration)
     mem_store.set(f"{call.message.chat.id}:expire_date", expire_date)
 
-    text = f"📝 Создание пользователя <code>{username}</code>\n" + get_template_info_text(
+    text = f"📝 <b>Создание пользователя</b> <code>{username}</code>\n" + get_template_info_text(
         id=template.id, data_limit=template.data_limit, expire_duration=template.expire_duration,
         username_prefix=template.username_prefix, username_suffix=template.username_suffix, inbounds=template.inbounds)
 
