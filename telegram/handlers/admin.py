@@ -515,12 +515,12 @@ def get_template_info_text(
     suffix_text = f"<b>Суффикс:</b> {username_suffix}" if username_suffix else ""
     
     text = f"""
-📊 <b>Параметры шаблона</>
+    📊 <b>Параметры шаблона</>
 
-<b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
-<b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-{'\n'.join(filter(None, [prefix_text, suffix_text]))}
-{protocols}
+    <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
+    <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
+    {'\n'.join(filter(None, [prefix_text, suffix_text]))}
+    {protocols}
         """
     return text
 
