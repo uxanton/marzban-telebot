@@ -26,7 +26,8 @@ class BotKeyboard:
             types.InlineKeyboardButton(text='👥 Пользователи', callback_data='users:1'),
             types.InlineKeyboardButton(text='✏️ Редактировать всех', callback_data='edit_all'))
         keyboard.add(
-            types.InlineKeyboardButton(text='➕ Создать юзера из шаблона', callback_data='template_add_user'))
+            types.InlineKeyboardButton(text='➕ Создать юзера из шаблона', callback_data='template_add_user'),
+            types.InlineKeyboardButton(text='➕ Создать шаблон', callback_data='create_user_template'))
         keyboard.add(
             types.InlineKeyboardButton(text='➕ Создать юзера', callback_data='add_user'))
         return keyboard
@@ -85,7 +86,7 @@ class BotKeyboard:
                 text='🔡 Случайный пользователь',
                 callback_data=f'random:{template_id}'))
         keyboard.add(types.InlineKeyboardButton(
-                text='🔙 ОТмена',
+                text='⬅ Отмена',
                 callback_data='cancel'))
         return keyboard
 
@@ -215,7 +216,7 @@ class BotKeyboard:
         keyboard = types.InlineKeyboardMarkup()
         keyboard.add(
             types.InlineKeyboardButton(
-                text="🔙 Отмена",
+                text="⬅ Отмена",
                 callback_data=callback_data
             )
         )

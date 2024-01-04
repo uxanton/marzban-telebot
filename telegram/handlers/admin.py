@@ -324,7 +324,7 @@ def edit_command(call: types.CallbackQuery):
     mem_store.set(f'{call.message.chat.id}:expire_date', datetime.fromtimestamp(db_user.expire) if db_user.expire else None)
     mem_store.set(f'{call.message.chat.id}:protocols', {protocol.value: inbounds for protocol, inbounds in db_user.inbounds.items()})
     bot.edit_message_text(
-        f"📝 Editing user `{username}`",
+        f"📝 Изменить `{username}`",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -404,7 +404,7 @@ def edit_user_data_limit_step(message: types.Message, username: str):
     mem_store.delete(f"{message.chat.id}:edit_msg_text")
     bot.send_message(
         message.chat.id,
-        text or f"📝 Editing user <code>{username}</code>",
+        text or f"📝 Изменить <code>{username}</code>",
         parse_mode="html",
         reply_markup=BotKeyboard.select_protocols(
         mem_store.get(f'{message.chat.id}:protocols'), "edit",
@@ -452,7 +452,7 @@ def edit_user_expire_step(message: types.Message, username: str):
     mem_store.delete(f"{message.chat.id}:edit_msg_text")
     bot.send_message(
         message.chat.id,
-        text or f"📝 Editing user <code>{username}</code>",
+        text or f"📝 Изменить <code>{username}</code>",
         parse_mode="html",
         reply_markup=BotKeyboard.select_protocols(
         mem_store.get(f'{message.chat.id}:protocols'), "edit",
@@ -851,6 +851,24 @@ def charge_command(call: types.CallbackQuery):
         )
     )
 
+@bot.callback_query_handler(cb_query_equals('create_user_template'), is_admin=True)
+def create_user_template(db: Session, user_template: UserTemplateCreate) -> UserTemplate:
+    inbound_tags: list[str] = []
+    for _, i in user_template.inbounds.items():
+        inbound_tags.extend(i)
+    dbuser_template = UserTemplate(
+        name=user_template.name,
+        data_limit=user_template.data_limit,
+        expire_duration=user_template.expire_duration,
+        username_prefix=user_template.username_prefix,
+        username_suffix=user_template.username_suffix,
+        inbounds=db.query(ProxyInbound).filter(ProxyInbound.tag.in_(inbound_tags)).all()
+    )
+    db.add(dbuser_template)
+    db.commit()
+    db.refresh(dbuser_template)
+    return dbuser_template
+    
 
 @bot.callback_query_handler(cb_query_equals('template_add_user'), is_admin=True)
 def add_user_from_template_command(call: types.CallbackQuery):
