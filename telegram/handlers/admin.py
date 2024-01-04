@@ -508,8 +508,8 @@ def get_template_info_text(
         id: int, data_limit: int, expire_duration: int, username_prefix: str, username_suffix: str, inbounds: dict):
     protocols = ""
     for p, inbounds in inbounds.items():
-        protocols += f"\n<b>{p.upper()}</b>\n"
-        protocols += "↳ " + ", ".join([f"{i}" for i in inbounds])
+        protocols += f"\n\n<b>{p.upper()}</b>\n"
+        protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
     text = f"""
 📊 <b>Параметры шаблона</>
 
@@ -860,7 +860,7 @@ def add_user_from_template_command(call: types.CallbackQuery):
             return bot.answer_callback_query(call.id, "Пока нет шаблонов!")
 
     bot.edit_message_text(
-        "<b>Выбери шаблон</b>:",
+        "<b>Выберите шаблон</b>:",
         call.message.chat.id,
         call.message.message_id,
         parse_mode='html',
@@ -893,7 +893,7 @@ def add_user_from_template(call: types.CallbackQuery):
         call.message.message_id,
         parse_mode="HTML"
     )
-    text = '👤 Введите имя:\n <code>Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.</code>'
+    text = '👤 <b>Введите имя:</b>\n <code>Должно быть от 3 до 32 символов и должно содержать a-z, A-Z, 0-9, и подчёркивание вместо пробелов.</code>'
     msg = bot.send_message(
         call.message.chat.id,
         text,
@@ -1502,7 +1502,7 @@ def confirm_user_command(call: types.CallbackQuery):
                 pass
             return bot.send_message(
                 call.message.chat.id,
-                '❌ Bot reload detected. Please start over.',
+                '❌ Кажется бот перезагружен. Начните заново.',
                 reply_markup=BotKeyboard.main_menu()
             )
 
@@ -1616,7 +1616,7 @@ def confirm_user_command(call: types.CallbackQuery):
                 pass
             return bot.send_message(
                 call.message.chat.id,
-                '❌ Bot reload detected. Please start over.',
+                '❌ Кажется бот перезагружен. Начните заново.',
                 reply_markup=BotKeyboard.main_menu()
             )
 
