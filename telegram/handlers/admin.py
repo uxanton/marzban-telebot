@@ -510,19 +510,19 @@ def get_template_info_text(
     for p, inbounds in inbounds.items():
         protocols += f"<b>{p.upper()}</b>"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
-        protocols += "\n"
 
     text = f"""
-    📊 <b>Параметры шаблона</>
+📊 <b>Параметры шаблона</>
 
-    <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
-    <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-    <b>Префикс:</b>: {username_prefix if username_prefix else 'Отсутствует'}
-    <b>Суффикс:</b>: {username_suffix if username_suffix else 'Отсутствует'}
-    {protocols}
-    """
+<b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
+<b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
+<b>Префикс:</b> {username_prefix if username_prefix else 'Без префикса'}
+<b>Суффикс:</b> {username_suffix if username_suffix else 'Без суффикса'}
+
+{protocols}
+"""
     
-    return text
+return text
 
 
 @bot.callback_query_handler(cb_query_startswith('edit_note:'), is_admin=True)
