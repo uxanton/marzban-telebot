@@ -851,23 +851,23 @@ def charge_command(call: types.CallbackQuery):
         )
     )
 
-@bot.callback_query_handler(cb_query_equals('create_user_template'), is_admin=True)
-def create_user_template(db: Session, user_template: UserTemplateCreate) -> UserTemplate:
-    inbound_tags: list[str] = []
-    for _, i in user_template.inbounds.items():
-        inbound_tags.extend(i)
-    dbuser_template = UserTemplate(
-        name=user_template.name,
-        data_limit=user_template.data_limit,
-        expire_duration=user_template.expire_duration,
-        username_prefix=user_template.username_prefix,
-        username_suffix=user_template.username_suffix,
-        inbounds=db.query(ProxyInbound).filter(ProxyInbound.tag.in_(inbound_tags)).all()
-    )
-    db.add(dbuser_template)
-    db.commit()
-    db.refresh(dbuser_template)
-    return dbuser_template
+# @bot.callback_query_handler(cb_query_equals('create_user_template'), is_admin=True)
+# def create_user_template(db: Session, user_template: UserTemplateCreate) -> UserTemplate:
+#     inbound_tags: list[str] = []
+#     for _, i in user_template.inbounds.items():
+#         inbound_tags.extend(i)
+#     dbuser_template = UserTemplate(
+#         name=user_template.name,
+#         data_limit=user_template.data_limit,
+#         expire_duration=user_template.expire_duration,
+#         username_prefix=user_template.username_prefix,
+#         username_suffix=user_template.username_suffix,
+#         inbounds=db.query(ProxyInbound).filter(ProxyInbound.tag.in_(inbound_tags)).all()
+#     )
+#     db.add(dbuser_template)
+#     db.commit()
+#     db.refresh(dbuser_template)
+#     return dbuser_template
     
 
 @bot.callback_query_handler(cb_query_equals('template_add_user'), is_admin=True)
