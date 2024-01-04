@@ -509,7 +509,7 @@ def get_template_info_text(
     protocols = ""
     for p, inbounds in inbounds.items():
         protocols += f"\n\n<b>{p.upper()}</b>\n"
-        protocols += "→ " + ", ".join([f"</code>{i}</code>" for i in inbounds])
+        protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
     text = f"""
 📊 <b>Параметры шаблона</>
 
@@ -970,7 +970,7 @@ def random_username(call: types.CallbackQuery):
 def add_user_from_template_username_step(message: types.Message):
     template_id = mem_store.get(f"{message.chat.id}:template_id")
     if template_id is None:
-        return bot.send_message(message.chat.id, "Какая-то ошибка! Попробуй снова.")
+        return bot.send_message(message.chat.id, "Какая-то ошибка! Попробуйте снова.")
 
     if not message.text:
         wait_msg = bot.send_message(message.chat.id, '❌ Имя не может быть пустым.')
