@@ -519,7 +519,8 @@ def get_template_info_text(
 
     <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
     <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-    {.join(filter(None, [prefix_text, suffix_text]))}
+    {prefix_text}
+    {suffix_text}
     {protocols}
     """
     
