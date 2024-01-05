@@ -510,13 +510,15 @@ def get_template_info_text(
     for p, inbounds in inbounds.items():
         protocols += f"<b>{p.upper()}</b>\n"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
+        prefix_text = f"{username_prefix and '<b>Префикс:</b> ' + username_prefix or ''}"
+        suffix_text = f"{username_suffix and '<b>Суффикс:</b> ' + username_suffix or ''}"
     text = f"""
 📊 <b>Параметры шаблона</b>
 
 <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
 <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-<b>Префикс:</b> {username_prefix if username_prefix else 'Без префикса'}
-<b>Суффикс:</b> {username_suffix if username_suffix else 'Без суффикса'}
+{prefix_text}
+{suffix_text}
 
 {protocols}
         """
@@ -1220,7 +1222,7 @@ def select_protocols(call: types.CallbackQuery):
             {protocol: [inbound['tag'] for inbound in xray.config.inbounds_by_protocol[protocol]]})
     mem_store.set(f'{call.message.chat.id}:protocols', protocols)
 
-    if action == ["edit", "create_from_template"]:
+    if action in ["edit", "create_from_template"]:
         return bot.edit_message_text(
             call.message.text,
             call.message.chat.id,

@@ -95,7 +95,7 @@ class BotKeyboard:
         keyboard = types.InlineKeyboardMarkup()
         keyboard.add(
             types.InlineKeyboardButton(
-                text='❌ Выключен' if user_info['status'] == 'active' else '✅ Активирован',
+                text='❌ Выключить' if user_info['status'] == 'active' else '✅ Активировать',
                 callback_data=f"{'suspend' if user_info['status'] == 'active' else 'activate'}:{user_info['username']}"
             ),
             types.InlineKeyboardButton(
@@ -280,15 +280,9 @@ class BotKeyboard:
                 types.InlineKeyboardButton(
                     text="⚠️ Лимит трафика:",
                     callback_data=f"help_edit"
-                )
-            )
-            keyboard.add(
-                types.InlineKeyboardButton(
-                    text=f"{readable_size(data_limit) if data_limit else 'Unlimited'}",
-                    callback_data=f"help_edit"
                 ),
                 types.InlineKeyboardButton(
-                    text="✏️ Изменить",
+                    text=f"'✏️ '{readable_size(data_limit) if data_limit else 'Безлимит'}",
                     callback_data=f"edit_user:{username}:data"
                 )
             )
@@ -296,16 +290,10 @@ class BotKeyboard:
                 types.InlineKeyboardButton(
                     text="📅 Срок действия:",
                     callback_data=f"help_edit"
-                )
-            )
-            keyboard.add(
-                types.InlineKeyboardButton(
-                    text=f"{expire_date.strftime('%Y-%m-%d') if expire_date else 'Never'}",
-                    callback_data=f"help_edit"
                 ),
                 types.InlineKeyboardButton(
-                    text="✏️ Изменить",
-                    callback_data=f"edit_user:{username}:expire"
+                    text=f"'✏️ '{expire_date.strftime('%Y-%m-%d') if expire_date else 'Безлимит'}",
+                    ccallback_data=f"edit_user:{username}:expire"
                 )
             )
 
