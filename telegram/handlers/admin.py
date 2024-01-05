@@ -378,7 +378,7 @@ def edit_user_command(call: types.CallbackQuery):
     elif action == "expire":
         msg = bot.send_message(
             call.message.chat.id,
-            '⬆️ Enter Expire Date (YYYY-MM-DD)\nOr You Can Use Regex Symbol: ^[0-9]{1,3}(M|D) :\n⚠️ Send 0 for never expire.',
+            '⬆️ Введите дату конца (YYYY-MM-DD)\nИли можете использовать: ^[0-9]{1,3}(M|D) :\n⚠️ Отправьте 0 для безлимита.',
             reply_markup=BotKeyboard.inline_cancel_action(f'user:{username}'))
         mem_store.set(f"{call.message.chat.id}:edit_msg_text", call.message.text)
         bot.clear_step_handler_by_chat_id(call.message.chat.id)
@@ -390,12 +390,12 @@ def edit_user_command(call: types.CallbackQuery):
 def edit_user_data_limit_step(message: types.Message, username: str):
     try:
         if float(message.text) < 0:
-            wait_msg = bot.send_message(message.chat.id, '❌ Data limit must be greater or equal to 0.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Объём трафика должен быть больше или равен.')
             schedule_delete_message(message.chat.id, wait_msg.message_id)
             return bot.register_next_step_handler(wait_msg, edit_user_data_limit_step, username=username)
         data_limit = float(message.text) * 1024 * 1024 * 1024
     except ValueError:
-        wait_msg = bot.send_message(message.chat.id, '❌ Data limit must be a number.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Объём трафика должен быть цифрой.')
         schedule_delete_message(message.chat.id, wait_msg.message_id)
         return bot.register_next_step_handler(wait_msg, edit_user_data_limit_step, username=username)
     mem_store.set(f'{message.chat.id}:data_limit', data_limit)
@@ -438,11 +438,11 @@ def edit_user_expire_step(message: types.Message, username: str):
         else:
             expire_date = None
         if expire_date and expire_date < today:
-            wait_msg = bot.send_message(message.chat.id, '❌ Expire date must be greater than today.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Срок окончания должен быть позднее сегодняшнего дня.')
             schedule_delete_message(message.chat.id, wait_msg.message_id)
             return bot.register_next_step_handler(wait_msg, edit_user_expire_step, username=username)
     except ValueError:
-        wait_msg = bot.send_message(message.chat.id, '❌ Expire date must be in YYYY-MM-DD format.\nOr You Can Use Regex Symbol: ^[0-9]{1,3}(M|D)')
+        wait_msg = bot.send_message(message.chat.id, '❌ Срок окончания должен быть формата YYYY-MM-DD.\nИли можете использовать: ^[0-9]{1,3}(M|D)')
         schedule_delete_message(message.chat.id, wait_msg.message_id)
         return bot.register_next_step_handler(wait_msg, edit_user_expire_step, username=username)
 
@@ -1096,20 +1096,20 @@ def add_user_username_step(message: types.Message):
 def add_user_data_limit_step(message: types.Message, username: str):
     try:
         if float(message.text) < 0:
-            wait_msg = bot.send_message(message.chat.id, '❌ Data limit must be greater or equal to 0.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Объём трафика должен быть больше или равен.')
             schedule_delete_message(message.chat.id, wait_msg.id)
             schedule_delete_message(message.chat.id, message.id)
             return bot.register_next_step_handler(wait_msg, add_user_data_limit_step, username=username)
         data_limit = float(message.text) * 1024 * 1024 * 1024
     except ValueError:
-        wait_msg = bot.send_message(message.chat.id, '❌ Data limit must be a number.')
+        wait_msg = bot.send_message(message.chat.id, '❌ Объём трафика должен быть цифрой.')
         schedule_delete_message(message.chat.id, wait_msg.id)
         schedule_delete_message(message.chat.id, message.id)
         return bot.register_next_step_handler(wait_msg, add_user_data_limit_step, username=username)
     schedule_delete_message(message.chat.id, message.id)
     cleanup_messages(message.chat.id)
     msg = bot.send_message(message.chat.id,
-        '⬆️ Enter Expire Date (YYYY-MM-DD)\nOr You Can Use Regex Symbol: ^[0-9]{1,3}(M|D) :\n⚠️ Send 0 for never expire.',
+        '⬆️ Введите дату конца (YYYY-MM-DD)\nИли можете использовать: ^[0-9]{1,3}(M|D) :\n⚠️ Отправьте 0 для безлимита.',
         reply_markup=BotKeyboard.inline_cancel_action())
     schedule_delete_message(message.chat.id, msg.id)
     bot.register_next_step_handler(msg, add_user_expire_step, username=username, data_limit=data_limit)
@@ -1141,13 +1141,13 @@ def add_user_expire_step(message: types.Message, username: str, data_limit: int)
         else:
             expire_date = None
         if expire_date and expire_date < today:
-            wait_msg = bot.send_message(message.chat.id, '❌ Expire date must be greater than today.')
+            wait_msg = bot.send_message(message.chat.id, '❌ Срок окончания должен быть позднее сегодняшнего дня.')
             schedule_delete_message(message.chat.id, wait_msg.id)
             schedule_delete_message(message.chat.id, message.id)
             return bot.register_next_step_handler(wait_msg, add_user_expire_step, username=username, data_limit=data_limit)
     except ValueError:
         wait_msg = bot.send_message(message.chat.id,
-            '❌ Expire date must be in YYYY-MM-DD format.\nOr You Can Use Regex Symbol: ^[0-9]{1,3}(M|D)')
+            '❌ Срок окончания должен быть формата YYYY-MM-DD.\nИли можете использовать: ^[0-9]{1,3}(M|D)')
         schedule_delete_message(message.chat.id, wait_msg.id)
         schedule_delete_message(message.chat.id, message.id)
         return bot.register_next_step_handler(wait_msg, add_user_expire_step, username=username, data_limit=data_limit)
@@ -1549,7 +1549,7 @@ def confirm_user_command(call: types.CallbackQuery):
         else:
             xray.operations.remove_user(db_user)
 
-        bot.answer_callback_query(call.id, "✅ User updated successfully.")
+        bot.answer_callback_query(call.id, "✅ Пользователь отредактирован успешно")
         
         try: note = user.note or ' '
         except: note = None
