@@ -342,7 +342,7 @@ def edit_command(call: types.CallbackQuery):
 def help_edit_command(call: types.CallbackQuery):
     bot.answer_callback_query(
         call.id,
-        text="Press the (✏️ Edit) button to edit",
+        text="Нажмите «Редактировать» для изменений",
         show_alert=True
     )
 
