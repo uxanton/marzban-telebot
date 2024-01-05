@@ -293,7 +293,7 @@ class BotKeyboard:
                 ),
                 types.InlineKeyboardButton(
                     text=f"'✏️ '{expire_date.strftime('%Y-%m-%d') if expire_date else 'Безлимит'}",
-                    ccallback_data=f"edit_user:{username}:expire"
+                    callback_data=f"edit_user:{username}:expire"
                 )
             )
 
