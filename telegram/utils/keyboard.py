@@ -282,7 +282,7 @@ class BotKeyboard:
                     callback_data=f"help_edit"
                 ),
                 types.InlineKeyboardButton(
-                    text=f"'✏️ '{readable_size(data_limit) if data_limit else 'Безлимит'}",
+                    text=f"✏️ {readable_size(data_limit) if data_limit else 'Безлимит'}",
                     callback_data=f"edit_user:{username}:data"
                 )
             )
@@ -292,7 +292,7 @@ class BotKeyboard:
                     callback_data=f"help_edit"
                 ),
                 types.InlineKeyboardButton(
-                    text=f"'✏️ '{expire_date.strftime('%Y-%m-%d') if expire_date else 'Безлимит'}",
+                    text=f"✏️ {expire_date.strftime('%Y-%m-%d') if expire_date else 'Безлимит'}",
                     callback_data=f"edit_user:{username}:expire"
                 )
             )
