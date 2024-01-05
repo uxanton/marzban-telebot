@@ -310,9 +310,7 @@ class BotKeyboard:
             types.InlineKeyboardButton(
                 text='Готово',
                 callback_data='confirm:edit_user' if action == "edit" else 'confirm:add_user'
-            )
-        )
-        keyboard.add(
+            ),
             types.InlineKeyboardButton(
                 text='Отмена',
                 callback_data=f'user:{username}' if action == "edit" else 'cancel'
