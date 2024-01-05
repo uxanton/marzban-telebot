@@ -278,7 +278,7 @@ class BotKeyboard:
         if action == "edit":
             keyboard.add(
                 types.InlineKeyboardButton(
-                    text=f"⚠️ Лимит трафика: {readable_size(data_limit) if data_limit else 'Безлимит'}",
+                    text=f"🔋 Лимит трафика: {readable_size(data_limit) if data_limit else 'Безлимит'}",
                     callback_data=f"edit_user:{username}:data"
                 )
             )
