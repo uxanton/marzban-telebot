@@ -461,17 +461,8 @@ def edit_user_expire_step(message: types.Message, username: str):
 
 
 @bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
-def users_command(call: types.CallbackQuery):
-    bot.edit_message_text(
-        get_users,
-        call.message.chat.id,
-        call.message.message_id,
-        parse_mode="HTML",
-        reply_markup=BotKeyboard.user_list(
-            users, page, total_pages=total_pages)
-    )
 
-def get_users(call: types.CallbackQuery) -> str:
+def get_users_list(call: types.CallbackQuery) :
     page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
     with GetDB() as db:
         total_pages = math.ceil(crud.get_users_count(db) / 10)
@@ -479,6 +470,16 @@ def get_users(call: types.CallbackQuery) -> str:
         text = """👥 Пользователей {users}: страница {page} из {total_pages}) \n
 <i>✅ Активные  ❌ Не активные
 🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
+
+def users_command(call: types.CallbackQuery):
+    bot.edit_message_text(
+        get_users_list,
+        call.message.chat.id,
+        call.message.message_id,
+        parse_mode="HTML",
+        reply_markup=BotKeyboard.user_list(
+            users, page, total_pages=total_pages)
+    )
     
     return text
 
