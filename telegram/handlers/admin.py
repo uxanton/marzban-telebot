@@ -1261,9 +1261,10 @@ def confirm_user_command(call: types.CallbackQuery):
             db_user = crud.get_user(db, username)
             crud.remove_user(db, db_user)
             xray.operations.remove_user(db_user)
+            
+        bot.answer_callback_query(call.id, "✅ Пользователь удалён")
 
         bot.edit_message_text(
-            bot.answer_callback_query(call.id, "✅ Пользователь `{username}` удалён"),
             users_command,
             call.message.chat.id,
             call.message.message_id,
