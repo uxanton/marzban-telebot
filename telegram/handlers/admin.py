@@ -459,19 +459,13 @@ def edit_user_expire_step(message: types.Message, username: str):
         username=username, data_limit=mem_store.get(f'{message.chat.id}:data_limit'), expire_date=expire_date))
     cleanup_messages(message.chat.id)
 
-# Определение функции для получения текста и пользователей
-def get_users_text_and_data(page):
+def update_users_message(call, page):
     with GetDB() as db:
         total_pages = math.ceil(crud.get_users_count(db) / 10)
         users = crud.get_users(db, offset=(page - 1) * 10, limit=10, sort=[crud.UsersSortingOptions["-created_at"]])
         text = """👥 Пользователи: (страницы {page}/{total_pages}) \n
 <i>✅ Активные  ❌ Не активные
 🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
-    return text, users, total_pages
-
-# Определение функции для обновления сообщения с пользователями
-def update_users_message(call, page):
-    text, users, total_pages = get_users_text_and_data(page)
 
     bot.edit_message_text(
         text,
@@ -482,7 +476,6 @@ def update_users_message(call, page):
             users, page, total_pages=total_pages)
     )
 
-# Определение функции-обработчика callback-запросов для пользователей
 @bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
 def users_command(call: types.CallbackQuery):
     page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
@@ -1270,9 +1263,11 @@ def confirm_user_command(call: types.CallbackQuery):
             db_user = crud.get_user(db, username)
             crud.remove_user(db, db_user)
             xray.operations.remove_user(db_user)
+        page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
 
         bot.edit_message_text(
-            get_users,
+            call, 
+            page,
             call.message.chat.id,
             call.message.message_id,
             parse_mode="HTML",
