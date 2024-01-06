@@ -459,10 +459,7 @@ def edit_user_expire_step(message: types.Message, username: str):
         username=username, data_limit=mem_store.get(f'{message.chat.id}:data_limit'), expire_date=expire_date))
     cleanup_messages(message.chat.id)
 
-
-@bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
-
-def get_users_list(call: types.CallbackQuery) :
+def get_users_list(page):
     page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
     with GetDB() as db:
         total_pages = math.ceil(crud.get_users_count(db) / 10)
@@ -470,7 +467,10 @@ def get_users_list(call: types.CallbackQuery) :
         text = """👥 Пользователей {users}: страница {page} из {total_pages}) \n
 <i>✅ Активные  ❌ Не активные
 🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
+return text, users, total_pages
 
+
+@bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
 def users_command(call: types.CallbackQuery):
     bot.edit_message_text(
         get_users_list,
@@ -479,9 +479,7 @@ def users_command(call: types.CallbackQuery):
         parse_mode="HTML",
         reply_markup=BotKeyboard.user_list(
             users, page, total_pages=total_pages)
-    )
-    
-    return text
+    ) 
 
 def get_user_info_text(
         status: str, username: str,sub_url : str, data_limit: int = None,
