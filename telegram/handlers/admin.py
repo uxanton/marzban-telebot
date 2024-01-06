@@ -1265,7 +1265,7 @@ def confirm_user_command(call: types.CallbackQuery):
             xray.operations.remove_user(db_user)
             
         bot.answer_callback_query(call.id, "✅ Пользователь удалён")
-        update_users_message(call.message.chat.id, call.message.message_id)
+        update_users_message(call, page=1)
         
 
         if TELEGRAM_LOGGER_CHANNEL_ID:
