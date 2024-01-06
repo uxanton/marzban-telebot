@@ -131,7 +131,7 @@ def restart_command(call: types.CallbackQuery):
 def delete_user_command(call: types.CallbackQuery):
     username = call.data.split(':')[1]
     bot.edit_message_text(
-        f'⚠️ Вы уверены? Пользователь будет удален: `{username}`.',
+        f'⚠️ Вы уверены? Пользователь `{username}` будет удален.',
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -1263,10 +1263,11 @@ def confirm_user_command(call: types.CallbackQuery):
             xray.operations.remove_user(db_user)
 
         bot.edit_message_text(
-            '✅ Пользователь удалён.',
+            bot.answer_callback_query(call.id, "✅ Пользователь `{username}` удалён")
+            users_command,
             call.message.chat.id,
             call.message.message_id,
-            reply_markup=BotKeyboard.main_menu()
+            reply_markup=BotKeyboard.user_list()
         )
         if TELEGRAM_LOGGER_CHANNEL_ID:
             text = f'''\
