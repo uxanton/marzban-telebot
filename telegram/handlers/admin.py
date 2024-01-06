@@ -1265,7 +1265,7 @@ def confirm_user_command(call: types.CallbackQuery):
         bot.answer_callback_query(call.id, "✅ Пользователь удалён")
 
         bot.edit_message_text(
-            users_command,
+            f'🔋 Строка для проверки',
             call.message.chat.id,
             call.message.message_id,
             parse_mode="HTML",
