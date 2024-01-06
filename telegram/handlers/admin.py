@@ -467,7 +467,7 @@ def get_users_list(page):
         text = """👥 Пользователей {users}: страница {page} из {total_pages}) \n
 <i>✅ Активные  ❌ Не активные
 🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
-return text, users, total_pages
+    return text, users, total_pages
 
 
 @bot.callback_query_handler(cb_query_startswith('users:'), is_admin=True)
