@@ -23,7 +23,7 @@ class BotKeyboard:
             types.InlineKeyboardButton(text='🔁 Системная инфа', callback_data='system'),
             types.InlineKeyboardButton(text='♻️ Рестарт Xray', callback_data='restart'))
         keyboard.add(
-            types.InlineKeyboardButton(text='👥 Пользователи', callback_data='users:1'))
+            types.InlineKeyboardButton(text='👥 Пользователи wefwe', callback_data='users:1'))
         return keyboard
 
 
