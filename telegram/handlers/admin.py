@@ -479,6 +479,17 @@ def users_command(call: types.CallbackQuery):
             users, page, total_pages=total_pages)
     )
 
+def get_users(call: types.CallbackQuery):
+    page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
+    with GetDB() as db:
+        total_pages = math.ceil(crud.get_users_count(db) / 10)
+        users = crud.get_users(db, offset=(page - 1) * 10, limit=10, sort=[crud.UsersSortingOptions["-created_at"]])
+        text = """👥 Пользователи: (страницы {page}/{total_pages}) \n
+<i>✅ Активные  ❌ Не активные
+🕰 Истёкшие  🪫 Ограниченные</i>""".format(page=page, total_pages=total_pages)
+    
+    return text
+
 def get_user_info_text(
         status: str, username: str,sub_url : str, data_limit: int = None,
         usage: int = None, expire: int = None, note: str = None) -> str:
@@ -1263,14 +1274,14 @@ def confirm_user_command(call: types.CallbackQuery):
             xray.operations.remove_user(db_user)
 
         bot.answer_callback_query(call.id, "✅ Пользователь удалён")
-
         bot.edit_message_text(
-            f'🔋 Строка для проверки',
+            get_users,
             call.message.chat.id,
             call.message.message_id,
             parse_mode="HTML",
             reply_markup=BotKeyboard.user_list(users, page, total_pages=total_pages)
             )
+
         if TELEGRAM_LOGGER_CHANNEL_ID:
             text = f'''\
 🗑 <b>#Deleted #From_Bot</b>
