@@ -23,12 +23,7 @@ class BotKeyboard:
             types.InlineKeyboardButton(text='🔁 Системная инфа', callback_data='system'),
             types.InlineKeyboardButton(text='♻️ Рестарт Xray', callback_data='restart'))
         keyboard.add(
-            types.InlineKeyboardButton(text='👥 Пользователи', callback_data='users:1'),
-            types.InlineKeyboardButton(text='✏️ Редактировать всех', callback_data='edit_all'))
-        keyboard.add(
-            types.InlineKeyboardButton(text='➕ Создать из шаблона', callback_data='template_add_user'))
-        keyboard.add(
-            types.InlineKeyboardButton(text='➕ Создать юзера', callback_data='add_user'))
+            types.InlineKeyboardButton(text='👥 Пользователи', callback_data='users:1'))
         return keyboard
 
 
@@ -260,11 +255,13 @@ class BotKeyboard:
                     )
                 )
         keyboard.add(
-            types.InlineKeyboardButton(
-                text='⬅ Назад',
-                callback_data='cancel'
+            types.InlineKeyboardButton(text='➕ Шаблона', callback_data='template_add_user')
+            types.InlineKeyboardButton(text='➕ Создать юзера', callback_data='add_user')
             )
-        )
+        keyboard.add(
+            types.InlineKeyboardButton(text='✏️ Редактировать всех', callback_data='edit_all'))
+        keyboard.add(
+            types.InlineKeyboardButton(text='⬅ Назад', callback_data='cancel'))
         return keyboard
 
     @staticmethod
