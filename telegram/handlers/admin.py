@@ -1263,16 +1263,9 @@ def confirm_user_command(call: types.CallbackQuery):
             db_user = crud.get_user(db, username)
             crud.remove_user(db, db_user)
             xray.operations.remove_user(db_user)
+            
         page = int(call.data.split(':')[1]) if len(call.data.split(':')) > 1 else 1
-
-        bot.edit_message_text(
-            call, 
-            page,
-            call.message.chat.id,
-            call.message.message_id,
-            parse_mode="HTML",
-            reply_markup=BotKeyboard.user_list(users, page, total_pages=total_pages)
-            )
+        update_users_message(call, page)
         bot.answer_callback_query(call.id, "✅ Пользователь удалён")
 
         if TELEGRAM_LOGGER_CHANNEL_ID:
