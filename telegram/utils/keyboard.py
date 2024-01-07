@@ -32,14 +32,15 @@ class BotKeyboard:
     def edit_all_menu():
         keyboard = types.InlineKeyboardMarkup()
         keyboard.add(
-            types.InlineKeyboardButton(text='🗑 Удалить просроченного', callback_data='delete_expired'),
-            types.InlineKeyboardButton(text='🗑 Удалить лимиты', callback_data='delete_limited'))
-        keyboard.add(
-            types.InlineKeyboardButton(text='🔋 Дата (➕|➖)', callback_data='add_data'),
-            types.InlineKeyboardButton(text='📅 Время (➕|➖)', callback_data='add_time'))
+            types.InlineKeyboardButton(text='🔋 Трафик: + или -', callback_data='add_data'),
+            types.InlineKeyboardButton(text='📅 Время: + или -', callback_data='add_time'))
         keyboard.add(
             types.InlineKeyboardButton(text='➕ Добавить протоколы', callback_data='inbound_add'),
             types.InlineKeyboardButton(text='➖ Удалить протоколы', callback_data='inbound_remove'))
+        keyboard.add(
+            types.InlineKeyboardButton(text='🗑 Удалить просроченных', callback_data='delete_expired'))
+        keyboard.add(
+            types.InlineKeyboardButton(text='🗑 Удалить лимиты', callback_data='delete_limited'))
         keyboard.add(types.InlineKeyboardButton(text='⬅ Назад', callback_data='cancel'))
         return keyboard
 
