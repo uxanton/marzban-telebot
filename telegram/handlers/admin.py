@@ -279,7 +279,7 @@ def add_time_step(message):
     schedule_delete_message(message.chat.id, message.message_id)
     msg = bot.send_message(
         message.chat.id,
-        f"⚠️ Are you sure? this will change Expiry Time of all users according to <b>{days} Days</b>",
+        f"⚠️ Это изменит время истечения срока действия для всех пользователей на <b>{days} дня</b>",
         parse_mode="html",
         reply_markup=BotKeyboard.confirm_action('add_time', days))
     cleanup_messages(message.chat.id)
@@ -289,7 +289,7 @@ def add_time_step(message):
 @bot.callback_query_handler(cb_query_startswith("inbound"), is_admin=True)
 def inbound_command(call: types.CallbackQuery):
     bot.edit_message_text(
-        f"Select inbound to *{call.data[8:].title()}* from all users",
+        f"Выберите протоколы у всех пользователей",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -299,7 +299,7 @@ def inbound_command(call: types.CallbackQuery):
 @bot.callback_query_handler(cb_query_startswith("confirm_inbound"), is_admin=True)
 def delete_expired_confirm_command(call: types.CallbackQuery):
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will *{call.data[16:].replace(':', ' ')} for All Users*‼️",
+        f"⚠️ Это изменит *{call.data[16:].replace(':', ' ')}* для всех пользователей",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
@@ -621,7 +621,7 @@ def user_command(call: types.CallbackQuery):
 def revoke_sub_command(call: types.CallbackQuery):
     username = call.data.split(":")[1]
     bot.edit_message_text(
-        f"⚠️ Are you sure? This will *Revoke Subscription* link for `{username}`‼️",
+        f"⚠️ Это  *возобновит подписку* для `{username}`",
         call.message.chat.id,
         call.message.message_id,
         parse_mode="markdown",
