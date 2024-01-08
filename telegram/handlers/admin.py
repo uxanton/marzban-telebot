@@ -862,15 +862,21 @@ def add_user_from_template_command(call: types.CallbackQuery):
     with GetDB() as db:
         templates = crud.get_user_templates(db)
         if not templates:
-            return bot.answer_callback_query(call.id, "Пока нет шаблонов!")
-
-    bot.edit_message_text(
-        "<b>Выберите шаблон</b>:",
-        call.message.chat.id,
-        call.message.message_id,
-        parse_mode='html',
-        reply_markup=BotKeyboard.templates_menu({template.name: template.id for template in templates})
-    )
+            bot.edit_message_text(
+                "<b>Шаблонов пока нету :(</b>:",
+                call.message.chat.id,
+                call.message.message_id,
+                parse_mode='html',
+                reply_markup=BotKeyboard.templates_menu({template.name: template.id for template in templates})
+            )
+        else:
+            bot.edit_message_text(
+                "<b>Выберите шаблон</b>:",
+                call.message.chat.id,
+                call.message.message_id,
+                parse_mode='html',
+                reply_markup=BotKeyboard.templates_menu({template.name: template.id for template in templates})
+            )
 
 
 @bot.callback_query_handler(cb_query_startswith('template_add_user:'), is_admin=True)
