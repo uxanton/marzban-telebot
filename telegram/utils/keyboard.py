@@ -283,7 +283,7 @@ class BotKeyboard:
             keyboard.add(
                 types.InlineKeyboardButton(
                     text=f"📅 Срок действия: {expire_date.strftime('%d.%m.%Y') if expire_date else 'Безлимит'}",
-                    callback_data=f"edit_user:{username}:data"
+                    callback_data=f"edit_user:{username}:expire"
                 )
             )
 
