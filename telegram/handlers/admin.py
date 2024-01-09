@@ -512,15 +512,11 @@ def get_template_info_text(
     for p, inbounds in inbounds.items():
         protocols += f"<b>{p.upper()}</b>\n"
         protocols += "→ " + ", ".join([f"{i}" for i in inbounds])
-        prefix_text = f"{username_prefix and '<b>Префикс:</b> ' + username_prefix or ''}"
-        suffix_text = f"{username_suffix and '<b>Суффикс:</b> ' + username_suffix or ''}"
     text = f"""
 📊 <b>Параметры шаблона</b>
 
 <b>Трафик:</b> {readable_size(data_limit) if data_limit else 'Безлимит'}
 <b>Дата окончания</b>: {(datetime.now() + relativedelta(seconds=expire_duration)).strftime('%Y-%m-%d') if expire_duration else 'Безлимит'}
-{prefix_text}
-{suffix_text}
 
 {protocols}
         """
@@ -863,7 +859,7 @@ def add_user_from_template_command(call: types.CallbackQuery):
         templates = crud.get_user_templates(db)
         if not templates:
             bot.edit_message_text(
-                "<b>Шаблонов пока нету :(</b>:",
+                "<b>Шаблонов пока нет</b>:",
                 call.message.chat.id,
                 call.message.message_id,
                 parse_mode='html',
